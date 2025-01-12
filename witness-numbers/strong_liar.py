@@ -15,17 +15,32 @@ def miller_rabin(x, a):
     '''
     x - odd number to be tested for being prime \n
     a - witness number less than x \n
-    x = 2^d * p + r \n    
+    x = 2^m * d + 1 \n    
     Checks if (a ** p) mod x == 1
     '''    
+    assert x > 2
     assert x % 2 == 1
     assert a < x
-    d = bin(x - 1)[2:][::-1].find('1')    
-    p = (x - 1) // 2 ** d
-    return sqam(a, p, x)['res'] == 1
+    n = x
+    m = 0
+    x -= 1
+    while (x % 2 == 0):
+        m += 1
+        x //= 2
+    d = x        
+    ans = sqam(a, d, n)['res'] 
+    if ans + 1 == n:
+        return True
+    else:
+        return ans == 1
 
 
-x = 91
-for a in range(1, x):
-    if miller_rabin(x, a):
-        print(a)
+
+s = {}
+for x in range(3, 100, 2):    
+    liars = []
+    for a in range(1, x):
+        if miller_rabin(x, a):
+            liars.append(a)
+    s[x] = liars
+print(s)
